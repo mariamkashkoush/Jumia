@@ -1,0 +1,92 @@
+ <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" ></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">J</div>
+            <div class="logo-text" (click)="toggleSidebar()">Jumia Admin</div>
+        </div>
+
+        <nav class="nav-section">
+            <div class="nav-item">
+                <a  class="nav-link active" [routerLink]="['/admin/dashboard']" [routerLinkActive]="'active'" >
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/customers']" [routerLinkActive]="'active'" >
+                    <i class="fas fa-users"></i>
+                    <span>Customers</span>
+                    <!-- <i class="fas fa-chevron-down" ></i> -->
+                </a>
+
+            </div>
+
+            <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/products']" [routerLinkActive]="'active'" >
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Products</span>
+                    <!-- <i class="fas fa-chevron-down" ></i> -->
+                </a>
+
+            </div>
+
+            <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/orders']" [routerLinkActive]="'active'" >
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+            </div>
+
+            <!-- <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/Payments']" [routerLinkActive]="'active'">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payments</span>
+                </a>
+            </div> -->
+
+            <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/sellers']" [routerLinkActive]="'active'">
+                    <i class="fas fa-store"></i>
+                    <span>Sellers</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a  class="nav-link" [routerLink]="['/admin/chats']" [routerLinkActive]="'active'">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>Chats</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a  class="nav-link" [routerLink]="['/admin/reviews']" [routerLinkActive]="'active'">
+                    <i class="fas fa-star"></i>
+                    <span>Reviews</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a  class="nav-link" [routerLink]="['/admin/Coupons']" [routerLinkActive]="'active'">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Coupons</span>
+                </a>
+            </div>
+
+            <!-- <div class="nav-item">
+                <a class="nav-link" [routerLink]="['/admin/settings']" [routerLinkActive]="'active'">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div> -->
+
+            <div class="nav-item">
+                <a class="nav-link" (click)="logout()" >
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+
+        </nav>
+    </aside>

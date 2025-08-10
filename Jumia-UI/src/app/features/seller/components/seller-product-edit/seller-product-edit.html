@@ -1,0 +1,261 @@
+<div class="edit-product">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>Edit Product</h2>
+      <p *ngIf="!isLoadingProduct">Editing: {{productForm.name}}</p>
+      <p *ngIf="isLoadingProduct">Loading product details...</p>
+    </div>
+    <div class="header-actions" *ngIf="!isLoadingProduct">
+      <button class="btn-secondary" (click)="cancel()">Cancel</button>
+      <button class="btn-danger" (click)="deleteProduct()">Delete Product</button>
+      <button class="btn-draft" (click)="saveDraft()">Save Draft</button>
+      <button
+        class="btn-primary"
+        (click)="updateProduct()"
+        [disabled]="!isFormValid() || isLoading">
+        {{isLoading ? 'Updating...' : 'Update Product'}}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoadingProduct">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Loading product details...</p>
+    </div>
+  </div>
+
+  <!-- Product Form -->
+  <div class="form-container" *ngIf="!isLoadingProduct">
+    <div class="form-sections">
+      <!-- Product Status -->
+      <div class="form-section">
+        <h3>Product Status</h3>
+        <div class="status-section">
+          <div class="current-status">
+            <span class="status-label">Current Status:</span>
+            <span class="status-badge" [class]="getStatusClass(productForm.status)">
+              {{productForm.status | titlecase}}
+            </span>
+          </div>
+          <div class="status-controls">
+            <label>Change Status:</label>
+            <select [(ngModel)]="productForm.status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="out_of_stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h3>Basic Information</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Product Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="productForm.name"
+              placeholder="Enter product name"
+              required>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Description *</label>
+            <textarea
+              [(ngModel)]="productForm.description"
+              placeholder="Describe your product in detail"
+              rows="4"
+              required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Category *</label>
+            <select [(ngModel)]="productForm.category" required>
+              <option value="">Select Category</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{category}}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Brand *</label>
+            <input
+              type="text"
+              [(ngModel)]="productForm.brand"
+              placeholder="Enter brand name"
+              required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing & Inventory -->
+      <div class="form-section">
+        <h3>Pricing & Inventory</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Price *</label>
+            <div class="input-with-prefix">
+              <span class="prefix">$</span>
+              <input
+                type="number"
+                [(ngModel)]="productForm.price"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Compare at Price</label>
+            <div class="input-with-prefix">
+              <span class="prefix">$</span>
+              <input
+                type="number"
+                [(ngModel)]="productForm.comparePrice"
+                placeholder="0.00"
+                min="0"
+                step="0.01">
+            </div>
+            <small>Optional: Show customers the original price</small>
+          </div>
+
+          <div class="form-group">
+            <label>Stock Quantity *</label>
+            <input
+              type="number"
+              [(ngModel)]="productForm.stock"
+              placeholder="0"
+              min="0"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label>SKU *</label>
+            <input
+              type="text"
+              [(ngModel)]="productForm.sku"
+              placeholder="Stock Keeping Unit"
+              required
+              readonly>
+            <small>SKU cannot be changed after product creation</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Images -->
+      <div class="form-section">
+        <h3>Product Images</h3>
+        <div class="images-section">
+          <div class="images-grid" *ngIf="productForm.images.length > 0">
+            <div class="image-item" *ngFor="let image of productForm.images; let i = index">
+              <img [src]="image" [alt]="'Product image ' + (i + 1)">
+              <button class="remove-image" (click)="removeImage(i)">×</button>
+              <div class="image-index" *ngIf="i === 0">Main</div>
+            </div>
+          </div>
+
+          <div class="add-image-section">
+            <button class="btn-add-image" (click)="addImageUrl()">
+              + Add Image URL
+            </button>
+            <p class="image-note">First image will be used as the main product image</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping & Details -->
+      <div class="form-section">
+        <h3>Shipping & Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input
+              type="number"
+              [(ngModel)]="productForm.weight"
+              placeholder="0.0"
+              min="0"
+              step="0.1">
+          </div>
+
+          <div class="form-group">
+            <label>Length (cm)</label>
+            <input
+              type="number"
+              [(ngModel)]="productForm.dimensions!.length"
+              placeholder="0"
+              min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Width (cm)</label>
+            <input
+              type="number"
+              [(ngModel)]="productForm.dimensions!.width"
+              placeholder="0"
+              min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Height (cm)</label>
+            <input
+              type="number"
+              [(ngModel)]="productForm.dimensions!.height"
+              placeholder="0"
+              min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-section">
+        <h3>Product Tags</h3>
+        <div class="tags-section">
+          <div class="tags-input">
+            <input
+              type="text"
+              [(ngModel)]="newTag"
+              (keypress)="onTagKeyPress($event)"
+              placeholder="Add a tag and press Enter">
+            <button type="button" (click)="addTag()">Add Tag</button>
+          </div>
+
+          <div class="tags-list" *ngIf="productForm.tags.length > 0">
+            <span class="tag" *ngFor="let tag of productForm.tags; let i = index">
+              {{tag}}
+              <button class="remove-tag" (click)="removeTag(i)">×</button>
+            </span>
+          </div>
+
+          <p class="tags-note">Tags help customers find your product through search</p>
+        </div>
+      </div>
+
+      <!-- Product History/Metadata -->
+      <div class="form-section">
+        <h3>Product Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Product ID:</span>
+            <span class="info-value">{{productForm.id}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">SKU:</span>
+            <span class="info-value">{{productForm.sku}}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Current Status:</span>
+            <span class="status-badge" [class]="getStatusClass(productForm.status)">
+              {{productForm.status | titlecase}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

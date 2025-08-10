@@ -1,0 +1,42 @@
+<div class="sidebar">
+  <ul class="category-list">
+    <li
+      *ngFor="let category of sidebarCategories"
+      class="category-item"
+      (mouseenter)="hoveredCategory = category"
+      (mouseleave)="hoveredCategory = null"
+      [routerLink]="['/categories',category.id]"
+    >
+      <i [class]="category"></i>&nbsp; {{ category.name }}
+
+      <div class="mega-menu" *ngIf="hoveredCategory === category && category.subCategories.length > 0">
+        <div class="mega-columns">
+          <ng-container *ngFor="let subCategoryLevel1 of category.subCategories">
+            <div class="mega-column">
+              <h6 class="column-title" [routerLink]="['/categories',subCategoryLevel1.id]">{{ subCategoryLevel1.name }}</h6>
+              <ul class="column-list">
+                <li *ngFor="let subCategoryLevel2 of subCategoryLevel1.subCategories"
+                [routerLink]="['/categories',subCategoryLevel2.id]"
+                >
+                  {{ subCategoryLevel2.name }}
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+
+          <!-- <div *ngIf="category.brands?.length" class="mega-column brand-column">
+            <h6 class="column-title">Best Brands</h6>
+            <ul class="column-list">
+              <li *ngFor="let brand of category.brands">{{ brand }}</li>
+            </ul>
+            <img
+              src="assets/official-store.png"
+              alt="Official Store"
+              class="official-store-image"
+            />
+          </div> -->
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

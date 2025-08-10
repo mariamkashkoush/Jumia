@@ -1,0 +1,137 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <!-- <h2>Dashboard Overview</h2> -->
+     <button class="requstbtn" (click)="requestreport()">Request Report</button>
+    <p>Welcome back! Here's what's happening with your store .</p>
+    <button class="requstbtn" (click)="requestcampain()">Request Campain</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-box"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{stats.totalOrders}}</h3>
+        <p>Total Orders</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-money-bill-1-wave"></i>
+      </div>
+      <div class="stat-content">
+        <h3>EGP{{stats.totalRevenue | number:'1.2-2'}}</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-shopping-bag"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{stats.totalProducts}}</h3>
+        <p>Total Products</p>
+      </div>
+    </div>
+
+    <!-- <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{stats.pendingOrders}}</h3>
+        <p>Pending Orders</p>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="recent-section">
+    <div class="section-header">
+      <h3><i class="fas fa-history"></i> Recent Orders</h3>
+      <button class="view-all-btn" (click)="navigatetoorders()">
+        <i class="fas fa-arrow-right"></i> View All Orders
+      </button>
+    </div>
+
+    <div class="orders-table">
+      <table>
+        <thead>
+          <tr>
+            <th class="text-center"><i class="fas fa-list-ol"></i> Items Count</th>
+            <th class="text-center"><i class="fas fa-money-bill-wave"></i> Amount</th>
+            <th class="text-center"><i class="fas fa-info-circle"></i> Status</th>
+            <th class="text-center"><i class="fas fa-calendar-alt"></i> Order Date</th>
+            <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders">
+            <td class="text-center">{{ order.orderItems?.length || 0 }}</td>
+            <td class="amount text-center">EGP{{order.subtotal | number:'1.2-2'}}</td>
+            <td class="text-center">
+              <span class="status-badge text-center" [class]="getStatusClass(order.status)">
+                {{order.status | titlecase}}
+              </span>
+            </td>
+            <td class="text-center">{{order.statusUpdatedAt | date:'short'}}</td>
+            <td class="text-center">
+              <div class="action-buttons d-flex justify-content-center">
+                <button
+                  class="btn-action view"
+                  title="View Details"
+                  (click)="openItemsModal(order)">
+                  <i class="fas fa-eye"></i> Details
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-overlay" *ngIf="showItemsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-receipt"></i> Order Items for Order #{{ selectedOrderForItems?.id }}</h3>
+          <button class="close-button" (click)="closeItemsModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="selectedOrderForItems && selectedOrderForItems.orderItems.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th><i class="fas fa-tag"></i> Product Name</th>
+                  <th><i class="fas fa-sort-numeric-up"></i> Quantity</th>
+                  <th><i class="fas fa-dollar-sign"></i> Unit Price</th>
+                  <th><i class="fas fa-calculator"></i> Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of selectedOrderForItems.orderItems">
+                  <td>{{ item.productName }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>EGP{{ item.priceAtPurchase | number:'1.2-2' }}</td>
+                  <td>EGP{{ item.quantity * item.priceAtPurchase | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="!selectedOrderForItems || selectedOrderForItems.orderItems.length === 0" class="no-items-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>No items found for this order.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeItemsModal()">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

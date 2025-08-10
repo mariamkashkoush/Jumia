@@ -1,0 +1,27 @@
+<div class="seller-container">
+  <app-seller-sidebar
+    [isCollapsed]="isSidebarCollapsed"
+    (toggleSidebar)="toggleSidebar()">
+  </app-seller-sidebar>
+
+  <main class="main-content" [class.expanded]="isSidebarCollapsed">
+    <header class="top-bar">
+      <button class="menu-toggle" (click)="toggleSidebar()">
+        <span class="hamburger"></span>
+      </button>
+      <h1>Seller Dashboard</h1>
+      <div class="user-info">
+        <span>Welcome, {{ seller?.sellerName }}</span>
+        <div class="avatar" (click)="navigateToSellerDetails()">
+          <img class="avatar-initial" [src]="'http://localhost:5087' +seller?.imageUrl"  />
+
+
+        </div>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
